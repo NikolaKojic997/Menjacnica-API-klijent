@@ -1,0 +1,20 @@
+[
+  {
+    "datum": "Wed May 09 10:53:54 CEST 2018",
+    "izValuta": "RSD",
+    "uValuta": "EUR",
+    "kurs": 0.008486
+  },
+  {
+    "datum": "Wed May 09 10:55:21 CEST 2018",
+    "izValuta": "AFN",
+    "uValuta": "KHR",
+    "kurs": 57.487584
+  },
+  {
+    "datum": "Wed May 09 10:55:27 CEST 2018",
+    "izValuta": "AFN",
+    "uValuta": "XAF",
+    "kurs": 7.85323
+  }
+]

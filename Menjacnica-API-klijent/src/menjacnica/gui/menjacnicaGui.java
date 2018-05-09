@@ -9,10 +9,12 @@ import javax.swing.border.EmptyBorder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import menjacnica.Log;
 import menjacnica.Valuta;
 import menjacnica.Zemlja;
 import menjacnica.util.URLConnectionUtil;
@@ -21,7 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -177,8 +183,10 @@ public class menjacnicaGui extends JFrame {
 						Gson gson = new GsonBuilder().create();
 						Valuta valuta = gson.fromJson(jsonObj, Valuta.class);
 
-						if (valuta != null)
+						if (valuta != null) {
 							izvrsiKonverziju(valuta.getVal());
+							upmatiLog(zahtevUrl, valuta.getVal(), "data/log.json");
+						}
 						else
 							JOptionPane.showMessageDialog(contentPane, "Nije pronadjena konverzija za: " + zahtevUrl,
 									"ERROR", JOptionPane.ERROR_MESSAGE);
@@ -191,6 +199,42 @@ public class menjacnicaGui extends JFrame {
 			btnKonvertuj.setBounds(147, 205, 122, 23);
 		}
 		return btnKonvertuj;
+	}
+	
+	private LinkedList<Log> ucitajLog(String filepath) {
+		LinkedList<Log> novaLista = new LinkedList<Log>();
+		try {
+			FileReader reader = new FileReader(filepath);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			JsonArray jsonArray = gson.fromJson(reader, JsonArray.class);
+			if(jsonArray == null)
+				return null;
+			for (int i = 0; i < jsonArray.size(); i++)
+				novaLista.add(gson.fromJson(jsonArray.get(i), Log.class));
+		} catch (FileNotFoundException e) {
+			
+		}
+		return novaLista;
+	}
+
+	private void upmatiLog(String zahtevUrl, double valuta, String filepath) {
+		LinkedList<Log> logList = ucitajLog(filepath);
+		Log logData = new Log();
+		logData.setIzValuta(zahtevUrl.split("_")[0]);
+		logData.setuValuta(zahtevUrl.split("_")[1]);
+		logData.setDatumVreme(new GregorianCalendar().getTime().toString());
+		logData.setKurs(valuta);
+		if (logList == null)
+			logList = new LinkedList<Log>();
+		logList.add(logData);
+		try {
+			FileWriter writer = new FileWriter(filepath);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			gson.toJson(logList, writer);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void izvrsiKonverziju(double val) {
