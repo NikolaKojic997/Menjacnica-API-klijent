@@ -13,10 +13,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import menjacnica.Valuta;
 import menjacnica.Zemlja;
 import menjacnica.util.URLConnectionUtil;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -26,6 +29,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class menjacnicaGui extends JFrame {
 
@@ -152,12 +157,56 @@ public class menjacnicaGui extends JFrame {
 		}
 		return UValutuTextField;
 	}
+	
+	
+	
 	private JButton getBtnKonvertuj() {
 		if (btnKonvertuj == null) {
 			btnKonvertuj = new JButton("Konvertuj");
+			btnKonvertuj.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					String url = "http://free.currencyconverterapi.com/api/v3/convert?q=";
+					String zahtevUrl = getSkraceniNaziv(IzValuteComboBox.getSelectedItem().toString()) + "_"
+							+ getSkraceniNaziv(UValutuComboBox.getSelectedItem().toString());
+					url = url + zahtevUrl;
+					try {
+						String content = URLConnectionUtil.getContent(url);
+						JsonParser jsonPraser = new JsonParser();
+						JsonObject jsonObj = jsonPraser.parse(content).getAsJsonObject().getAsJsonObject("results")
+								.getAsJsonObject(zahtevUrl);
+						Gson gson = new GsonBuilder().create();
+						Valuta valuta = gson.fromJson(jsonObj, Valuta.class);
+
+						if (valuta != null)
+							izvrsiKonverziju(valuta.getVal());
+						else
+							JOptionPane.showMessageDialog(contentPane, "Nije pronadjena konverzija za: " + zahtevUrl,
+									"ERROR", JOptionPane.ERROR_MESSAGE);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			});
 			btnKonvertuj.setBounds(147, 205, 122, 23);
 		}
 		return btnKonvertuj;
+	}
+
+	private void izvrsiKonverziju(double val) {
+	try {
+		double iznosIz = Double.parseDouble(IzValuteTextField.getText());
+		UValutuTextField.setText(String.valueOf(iznosIz * val));
+	} catch (NumberFormatException nfe) {
+		JOptionPane.showMessageDialog(contentPane, "Morate uneti broj u polje za iznos!", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
+}
+	
+	private String getSkraceniNaziv(String ime) {
+		for (int i = 0; i < zemlje.size(); i++)
+			if (zemlje.get(i).getName().equals(ime))
+				return zemlje.get(i).getCurrencyId();
+		return null;
 	}
 	
 	private String[] getZemlje() {
