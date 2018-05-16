@@ -16,5 +16,41 @@
     "izValuta": "AFN",
     "uValuta": "XAF",
     "kurs": 7.85323
+  },
+  {
+    "datum": "Wed May 16 10:09:15 CEST 2018",
+    "izValuta": "AFN",
+    "uValuta": "AFN",
+    "kurs": 1.0
+  },
+  {
+    "datum": "Wed May 16 10:09:21 CEST 2018",
+    "izValuta": "AFN",
+    "uValuta": "BRL",
+    "kurs": 0.051519
+  },
+  {
+    "datum": "Wed May 16 10:31:07 CEST 2018",
+    "izValuta": "RSD",
+    "uValuta": "EUR",
+    "kurs": 0.008538
+  },
+  {
+    "datum": "Wed May 16 10:33:07 CEST 2018",
+    "izValuta": "RSD",
+    "uValuta": "EUR",
+    "kurs": 0.008481
+  },
+  {
+    "datum": "Wed May 16 10:35:36 CEST 2018",
+    "izValuta": "EUR",
+    "uValuta": "RSD",
+    "kurs": 117.908036
+  },
+  {
+    "datum": "Wed May 16 10:39:42 CEST 2018",
+    "izValuta": "CHF",
+    "uValuta": "RSD",
+    "kurs": 99.568337
   }
 ]

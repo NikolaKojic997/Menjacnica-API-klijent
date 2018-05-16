@@ -17,6 +17,8 @@ import com.google.gson.JsonParser;
 import menjacnica.Log;
 import menjacnica.Valuta;
 import menjacnica.Zemlja;
+import menjacnica.guiKontroler.guiKontroler;
+import menjacnica.sistemskeOperacije.SOGetZemlje;
 import menjacnica.util.URLConnectionUtil;
 
 import javax.swing.JLabel;
@@ -42,40 +44,21 @@ public class menjacnicaGui extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblIzValuteZemlje;
-	private JComboBox IzValuteComboBox;
+	public JComboBox IzValuteComboBox;
 	private JLabel lblUValutuZemlje;
-	private JComboBox UValutuComboBox;
+	public JComboBox UValutuComboBox;
 	private JLabel lblIznos;
 	private JLabel label;
 	private JTextField IzValuteTextField;
 	private JTextField UValutuTextField;
 	private JButton btnKonvertuj;
-	
-	LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>();
-	String[] nizZemalja; 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					menjacnicaGui frame = new menjacnicaGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
+	public LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>(); // treba obrisati!
+	public String[] nizZemalja;
+
 	public menjacnicaGui() {
-		
-		
-		nizZemalja = getZemlje();
+
+		nizZemalja = guiKontroler.preuzmiZemlje(zemlje);
 		setResizable(false);
 		setTitle("Menjacnica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,9 +77,9 @@ public class menjacnicaGui extends JFrame {
 		contentPane.add(getUValutuTextField());
 		contentPane.add(getBtnKonvertuj());
 		setLocationRelativeTo(null);
-		
-	
+
 	}
+
 	private JLabel getLblIzValuteZemlje() {
 		if (lblIzValuteZemlje == null) {
 			lblIzValuteZemlje = new JLabel("Iz valute zemlje:");
@@ -105,25 +88,28 @@ public class menjacnicaGui extends JFrame {
 		}
 		return lblIzValuteZemlje;
 	}
-	private JComboBox getIzValuteComboBox() {
+
+	public JComboBox getIzValuteComboBox() {
 		if (IzValuteComboBox == null) {
-			
+
 			IzValuteComboBox = new JComboBox();
 			IzValuteComboBox.setBounds(59, 79, 122, 20);
 			IzValuteComboBox.setModel(new DefaultComboBoxModel(nizZemalja));
 		}
 		return IzValuteComboBox;
 	}
-	private JLabel getLblUValutuZemlje() {
+
+	public JLabel getLblUValutuZemlje() {
 		if (lblUValutuZemlje == null) {
 			lblUValutuZemlje = new JLabel("U valutu zemlje:");
 			lblUValutuZemlje.setFont(new Font("Yu Gothic UI Semilight", Font.PLAIN, 18));
 			lblUValutuZemlje.setBounds(231, 37, 162, 26);
-			
+
 		}
 		return lblUValutuZemlje;
 	}
-	private JComboBox getUValutuComboBox() {
+
+	public JComboBox getUValutuComboBox() {
 		if (UValutuComboBox == null) {
 			UValutuComboBox = new JComboBox();
 			UValutuComboBox.setBounds(231, 79, 122, 20);
@@ -131,6 +117,7 @@ public class menjacnicaGui extends JFrame {
 		}
 		return UValutuComboBox;
 	}
+
 	private JLabel getLblIznos() {
 		if (lblIznos == null) {
 			lblIznos = new JLabel("Iznos:");
@@ -139,6 +126,7 @@ public class menjacnicaGui extends JFrame {
 		}
 		return lblIznos;
 	}
+
 	private JLabel getLabel() {
 		if (label == null) {
 			label = new JLabel("Iznos:");
@@ -147,7 +135,8 @@ public class menjacnicaGui extends JFrame {
 		}
 		return label;
 	}
-	private JTextField getIzValuteTextField() {
+
+	public JTextField getIzValuteTextField() {
 		if (IzValuteTextField == null) {
 			IzValuteTextField = new JTextField();
 			IzValuteTextField.setBounds(59, 147, 122, 20);
@@ -155,7 +144,8 @@ public class menjacnicaGui extends JFrame {
 		}
 		return IzValuteTextField;
 	}
-	private JTextField getUValutuTextField() {
+
+	public JTextField getUValutuTextField() {
 		if (UValutuTextField == null) {
 			UValutuTextField = new JTextField();
 			UValutuTextField.setBounds(231, 147, 122, 20);
@@ -163,117 +153,21 @@ public class menjacnicaGui extends JFrame {
 		}
 		return UValutuTextField;
 	}
-	
-	
-	
+
 	private JButton getBtnKonvertuj() {
 		if (btnKonvertuj == null) {
 			btnKonvertuj = new JButton("Konvertuj");
 			btnKonvertuj.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					String url = "http://free.currencyconverterapi.com/api/v3/convert?q=";
-					String zahtevUrl = getSkraceniNaziv(IzValuteComboBox.getSelectedItem().toString()) + "_"
-							+ getSkraceniNaziv(UValutuComboBox.getSelectedItem().toString());
-					url = url + zahtevUrl;
-					try {
-						String content = URLConnectionUtil.getContent(url);
-						JsonParser jsonPraser = new JsonParser();
-						JsonObject jsonObj = jsonPraser.parse(content).getAsJsonObject().getAsJsonObject("results")
-								.getAsJsonObject(zahtevUrl);
-						Gson gson = new GsonBuilder().create();
-						Valuta valuta = gson.fromJson(jsonObj, Valuta.class);
 
-						if (valuta != null) {
-							izvrsiKonverziju(valuta.getVal());
-							upmatiLog(zahtevUrl, valuta.getVal(), "data/log.json");
-						}
-						else
-							JOptionPane.showMessageDialog(contentPane, "Nije pronadjena konverzija za: " + zahtevUrl,
-									"ERROR", JOptionPane.ERROR_MESSAGE);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					guiKontroler.Konvertuj();
+
 				}
-				
+
 			});
 			btnKonvertuj.setBounds(147, 205, 122, 23);
 		}
 		return btnKonvertuj;
 	}
-	
-	private LinkedList<Log> ucitajLog(String filepath) {
-		LinkedList<Log> novaLista = new LinkedList<Log>();
-		try {
-			FileReader reader = new FileReader(filepath);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			JsonArray jsonArray = gson.fromJson(reader, JsonArray.class);
-			if(jsonArray == null)
-				return null;
-			for (int i = 0; i < jsonArray.size(); i++)
-				novaLista.add(gson.fromJson(jsonArray.get(i), Log.class));
-		} catch (FileNotFoundException e) {
-			
-		}
-		return novaLista;
-	}
 
-	private void upmatiLog(String zahtevUrl, double valuta, String filepath) {
-		LinkedList<Log> logList = ucitajLog(filepath);
-		Log logData = new Log();
-		logData.setIzValuta(zahtevUrl.split("_")[0]);
-		logData.setuValuta(zahtevUrl.split("_")[1]);
-		logData.setDatumVreme(new GregorianCalendar().getTime().toString());
-		logData.setKurs(valuta);
-		if (logList == null)
-			logList = new LinkedList<Log>();
-		logList.add(logData);
-		try {
-			FileWriter writer = new FileWriter(filepath);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(logList, writer);
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void izvrsiKonverziju(double val) {
-	try {
-		double iznosIz = Double.parseDouble(IzValuteTextField.getText());
-		UValutuTextField.setText(String.valueOf(iznosIz * val));
-	} catch (NumberFormatException nfe) {
-		JOptionPane.showMessageDialog(contentPane, "Morate uneti broj u polje za iznos!", "ERROR", JOptionPane.ERROR_MESSAGE);
-	}
-}
-	
-	private String getSkraceniNaziv(String ime) {
-		for (int i = 0; i < zemlje.size(); i++)
-			if (zemlje.get(i).getName().equals(ime))
-				return zemlje.get(i).getCurrencyId();
-		return null;
-	}
-	
-	private String[] getZemlje() {
-		try {
-			
-			
-			
-			String content = URLConnectionUtil.getContent("http://free.currencyconverterapi.com/api/v3/countries");
-			Gson gson = new GsonBuilder().create();
-			JsonParser jp = new JsonParser();
-			JsonObject jo = jp.parse(content).getAsJsonObject().getAsJsonObject("results");
-			for (Map.Entry<String, JsonElement> entry : jo.entrySet()) {
-				Zemlja zemlja = gson.fromJson(entry.getValue(), Zemlja.class);
-				zemlje.add(zemlja);
-				
-			}
-			String[] naziviZemalja = new String[zemlje.size()];
-			for (int i = 0; i < zemlje.size(); i++)
-				naziviZemalja[i] = zemlje.get(i).getName();
-			return naziviZemalja;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }
