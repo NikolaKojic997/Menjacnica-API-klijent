@@ -7,24 +7,24 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import menjacnica.Menjacnica;
 import menjacnica.Valuta;
 import menjacnica.Zemlja;
-import menjacnica.menjacnica;
 import menjacnica.sistemskeOperacije.SOUcitajLog;
 import menjacnica.sistemskeOperacije.SOUpamtiLog;
 
-public class guiKontroler {
+public class GuiKontroler {
 	
-	public static menjacnicaGui glavniProzor ;
-	public static menjacnica sistem;
+	public static MenjacnicaGui glavniProzor ;
+	public static Menjacnica sistem;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					sistem = new menjacnica();
-					guiKontroler.glavniProzor = new menjacnicaGui();
-					guiKontroler.glavniProzor.setVisible(true);
+					sistem = new Menjacnica();
+					GuiKontroler.glavniProzor = new MenjacnicaGui();
+					GuiKontroler.glavniProzor.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -36,19 +36,17 @@ public class guiKontroler {
 		return sistem.preuzmiZemlje(zemlje);
 			
 	}
-	
-	
-	
-	public static void Konvertuj() {
+
+	public static void konvertuj() {
 		
 		String url = "http://free.currencyconverterapi.com/api/v3/convert?q=";
-		String zahtevUrl = guiKontroler.getSkraceniNaziv(glavniProzor.getIzValuteComboBox().getSelectedItem().toString()) + "_"
-				+ guiKontroler.getSkraceniNaziv(glavniProzor.getUValutuComboBox().getSelectedItem().toString());
+		String zahtevUrl = GuiKontroler.getSkraceniNaziv(glavniProzor.getIzValuteComboBox().getSelectedItem().toString()) + "_"
+				+ GuiKontroler.getSkraceniNaziv(glavniProzor.getUValutuComboBox().getSelectedItem().toString());
 		
 		Valuta v = sistem.preuzmiValutu(url, zahtevUrl);
 		
 		if (v != null) {
-			guiKontroler.izvrsiKonverziju(v.getVal(), glavniProzor.getIzValuteTextField(),
+			GuiKontroler.izvrsiKonverziju(v.getVal(), glavniProzor.getIzValuteTextField(),
 					glavniProzor.getUValutuTextField());
 			sistem.upamtiLog(zahtevUrl, v.getVal(), "data/log.json");
 		}
@@ -62,7 +60,7 @@ public class guiKontroler {
 			double iznosIz = Double.parseDouble(jTextField.getText());
 			jTextField2.setText(String.valueOf(iznosIz * val));
 		} catch (NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(guiKontroler.glavniProzor.getContentPane(), "Morate uneti broj u polje za iznos!", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(GuiKontroler.glavniProzor.getContentPane(), "Morate uneti broj u polje za iznos!", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

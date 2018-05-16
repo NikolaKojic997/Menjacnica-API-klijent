@@ -7,7 +7,7 @@ import menjacnica.sistemskeOperacije.SOKonvertuj;
 import menjacnica.sistemskeOperacije.SOUcitajLog;
 import menjacnica.sistemskeOperacije.SOUpamtiLog;
 
-public class menjacnica {
+public class Menjacnica {
 
 	
 	 

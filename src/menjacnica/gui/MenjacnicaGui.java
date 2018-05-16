@@ -39,7 +39,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class menjacnicaGui extends JFrame {
+public class MenjacnicaGui extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblIzValuteZemlje;
@@ -55,9 +55,9 @@ public class menjacnicaGui extends JFrame {
 	public LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>(); // treba obrisati!
 	public String[] nizZemalja;
 
-	public menjacnicaGui() {
+	public MenjacnicaGui() {
 
-		nizZemalja = guiKontroler.preuzmiZemlje(zemlje);
+		nizZemalja = GuiKontroler.preuzmiZemlje(zemlje);
 		setResizable(false);
 		setTitle("Menjacnica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,7 +159,7 @@ public class menjacnicaGui extends JFrame {
 			btnKonvertuj.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 
-					guiKontroler.Konvertuj();
+					GuiKontroler.konvertuj();
 
 				}
 
