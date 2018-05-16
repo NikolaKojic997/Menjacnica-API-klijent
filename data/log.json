@@ -58,5 +58,11 @@
     "izValuta": "EUR",
     "uValuta": "RSD",
     "kurs": 117.908036
+  },
+  {
+    "datum": "Wed May 16 11:00:34 CEST 2018",
+    "izValuta": "RSD",
+    "uValuta": "SEK",
+    "kurs": 0.087521
   }
 ]
