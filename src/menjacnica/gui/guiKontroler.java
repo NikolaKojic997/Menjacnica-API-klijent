@@ -1,4 +1,4 @@
-package menjacnica.guiKontroler;
+package menjacnica.gui;
 
 import java.awt.EventQueue;
 import java.awt.TextField;
@@ -10,7 +10,6 @@ import javax.swing.JTextField;
 import menjacnica.Valuta;
 import menjacnica.Zemlja;
 import menjacnica.menjacnica;
-import menjacnica.gui.menjacnicaGui;
 import menjacnica.sistemskeOperacije.SOUcitajLog;
 import menjacnica.sistemskeOperacije.SOUpamtiLog;
 

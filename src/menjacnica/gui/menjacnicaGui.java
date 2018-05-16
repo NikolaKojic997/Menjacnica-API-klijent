@@ -17,7 +17,6 @@ import com.google.gson.JsonParser;
 import menjacnica.Log;
 import menjacnica.Valuta;
 import menjacnica.Zemlja;
-import menjacnica.guiKontroler.guiKontroler;
 import menjacnica.sistemskeOperacije.SOGetZemlje;
 import menjacnica.util.URLConnectionUtil;
 
